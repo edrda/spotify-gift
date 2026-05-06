@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Um presente especial 💚</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Circular+Std:wght@400;700;900&family=Montserrat:wght@400;600;700;900&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --green: #1DB954;
+            --green-dark: #1aa34a;
+            --black: #000000;
+            --dark: #121212;
+            --surface: #181818;
+            --surface2: #242424;
+            --text: #FFFFFF;
+            --text-muted: #B3B3B3;
+            --font: 'Montserrat', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--text);
+            font-family: var(--font);
+            overflow-x: hidden;
+        }
+
+        /* ── TELA 1: WRAPPED ── */
+        #wrapped {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+            position: relative;
+            overflow: hidden;
+            background: var(--black);
+        }
+
+        .wrapped-bg {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 60% 50% at 50% 0%, rgba(29, 185, 84, 0.18) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 20% 80%, rgba(29, 185, 84, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .spotify-logo {
+            width: 36px;
+            margin-bottom: 48px;
+            opacity: 0;
+            animation: fadeUp 0.7s ease forwards 0.2s;
+        }
+
+        .wrapped-badge {
+            background: var(--green);
+            color: var(--black);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 5px 14px;
+            border-radius: 100px;
+            margin-bottom: 32px;
+            opacity: 0;
+            animation: fadeUp 0.7s ease forwards 0.4s;
+        }
+
+        .wrapped-title {
+            font-size: clamp(28px, 6vw, 48px);
+            font-weight: 900;
+            text-align: center;
+            line-height: 1.15;
+            letter-spacing: -0.5px;
+            max-width: 560px;
+            opacity: 0;
+            animation: fadeUp 0.7s ease forwards 0.6s;
+        }
+
+        .wrapped-title span {
+            color: var(--green);
+        }
+
+        .wrapped-sub {
+            margin-top: 20px;
+            font-size: clamp(15px, 3.5vw, 18px);
+            color: var(--text-muted);
+            font-weight: 400;
+            text-align: center;
+            max-width: 420px;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeUp 0.7s ease forwards 0.8s;
+        }
+
+        .btn-present {
+            margin-top: 48px;
+            background: var(--green);
+            color: var(--black);
+            border: none;
+            border-radius: 100px;
+            font-family: var(--font);
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 17px 48px;
+            cursor: pointer;
+            transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+            opacity: 0;
+            animation: fadeUp 0.7s ease forwards 1s;
+            box-shadow: 0 8px 32px rgba(29, 185, 84, 0.25);
+        }
+
+        .btn-present:hover {
+            background: #1ed760;
+            transform: scale(1.04);
+            box-shadow: 0 12px 40px rgba(29, 185, 84, 0.4);
+        }
+
+        .btn-present:active {
+            transform: scale(0.98);
+        }
+
+        /* ── TELA 2: PLAYER ── */
+        #player {
+            display: none;
+            min-height: 100vh;
+            background: var(--dark);
+            flex-direction: column;
+        }
+
+        /* Header do player */
+        .player-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 20px 12px;
+        }
+
+        .ph-chevron {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.15s;
+        }
+
+        .ph-chevron:hover {
+            color: var(--text);
+        }
+
+        .ph-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .ph-dots {
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 20px;
+            letter-spacing: 2px;
+        }
+
+        /* Capa da música */
+        .album-wrap {
+            padding: 20px 24px 10px;
+        }
+
+        .album-cover {
+            width: 100%;
+            max-width: 380px;
+            margin: 0 auto;
+            display: block;
+            border-radius: 8px;
+            aspect-ratio: 1;
+            object-fit: cover;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7);
+            background: var(--surface2);
+            /* SUBSTITUA o src abaixo pela foto da sua mãe */
+            /* Exemplo: src="foto-mae.jpg" */
+        }
+
+        .album-cover-placeholder {
+            width: 100%;
+            max-width: 380px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #1DB954 0%, #0d5e2a 50%, #121212 100%);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7);
+            font-size: 72px;
+        }
+
+        /* Info da faixa */
+        .track-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 24px 8px;
+        }
+
+        .track-texts {}
+
+        .track-name {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .track-artist {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .track-heart {
+            color: var(--green);
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        /* Barra de progresso */
+        .progress-wrap {
+            padding: 4px 24px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 4px;
+            background: var(--surface2);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--text);
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.5s linear;
+            position: relative;
+        }
+
+        .progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: var(--text);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .progress-bar-bg:hover .progress-bar-fill::after {
+            opacity: 1;
+        }
+
+        .progress-times {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        /* Controles */
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 24px 8px;
+        }
+
+        .ctrl-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.15s, transform 0.1s;
+            padding: 4px;
+        }
+
+        .ctrl-btn:hover {
+            color: var(--text);
+            transform: scale(1.1);
+        }
+
+        .ctrl-play {
+            width: 64px;
+            height: 64px;
+            background: var(--text);
+            border-radius: 50%;
+            color: var(--black) !important;
+            font-size: 24px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            transition: transform 0.15s, box-shadow 0.15s !important;
+        }
+
+        .ctrl-play:hover {
+            transform: scale(1.06) !important;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        .ctrl-play svg {
+            margin-left: 3px;
+        }
+
+        /* Volume */
+        .volume-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 24px;
+        }
+
+        .vol-bar-bg {
+            flex: 1;
+            height: 4px;
+            background: var(--surface2);
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .vol-bar-fill {
+            height: 100%;
+            background: var(--text-muted);
+            border-radius: 2px;
+            width: 70%;
+            transition: width 0.1s;
+        }
+
+        /* Extra row */
+        .extra-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+        }
+
+        .extra-icon {
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.15s;
+        }
+
+        .extra-icon:hover {
+            color: var(--text);
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: var(--surface2);
+            margin: 8px 24px;
+        }
+
+        /* ── LETRA / MENSAGEM ── */
+        .lyrics-section {
+            padding: 20px 24px;
+            background: var(--surface);
+            margin: 0 16px;
+            border-radius: 12px;
+        }
+
+        .lyrics-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .lyrics-text {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.7;
+            color: var(--text);
+            /* SUBSTITUA pelo texto da sua mensagem */
+        }
+
+        .lyrics-text .line-muted {
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        /* ── GALERIA ── */
+        .gallery-section {
+            padding: 32px 16px 48px;
+        }
+
+        .gallery-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            padding: 0 8px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .gallery-item {
+            /* aspect-ratio: 1; */
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--surface2);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .gallery-item:first-child {
+            grid-column: span 2;
+            aspect-ratio: 16/9;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            padding: 8px;
+        }
+
+        .gallery-placeholder span {
+            font-size: 32px;
+        }
+
+        /* Lightbox */
+        #lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        #lightbox.active {
+            display: flex;
+        }
+
+        #lightbox img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
+        #lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 28px;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        #lightbox-close:hover {
+            opacity: 1;
+        }
+
+        /* ── ANIMAÇÕES ── */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .player-animate {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* ── YOUTUBE PLAYER HIDDEN ── */
+        #yt-player {
+            position: fixed;
+            bottom: -200px;
+            left: -200px;
+            width: 1px;
+            height: 1px;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        /* Aviso de erro do YouTube */
+        .yt-error {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 8px 24px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ══════════════════════════════
+     TELA 1 — WRAPPED
+══════════════════════════════ -->
+    <section id="wrapped">
+        <div class="wrapped-bg"></div>
+
+        <!-- Ícone Spotify SVG oficial -->
+        <svg class="spotify-logo" viewBox="0 0 24 24" fill="var(--green)" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.516 17.316a.75.75 0 01-1.031.248c-2.824-1.725-6.38-2.115-10.565-1.16a.75.75 0 01-.332-1.463c4.583-1.043 8.516-.594 11.681 1.344a.75.75 0 01.247 1.03zm1.47-3.27a.937.937 0 01-1.288.31C14.93 12.293 10.8 11.75 7.44 12.73a.938.938 0 01-.543-1.793c3.82-1.157 8.565-.596 11.8 1.81a.937.937 0 01.29 1.3zm.127-3.404C15.25 8.32 9.05 8.12 5.7 9.132a1.124 1.124 0 01-.65-2.151c3.89-1.178 10.355-.95 14.433 1.58a1.124 1.124 0 01-1.37 1.78z" />
+        </svg>
+
+        <div class="wrapped-badge">Spotify Wrapped ✦ Edição Especial</div>
+
+        <h1 class="wrapped-title">
+            Suas filhas separaram um<br><span>presente especial!</span>
+        </h1>
+
+        <p class="wrapped-sub">
+            Um momento único feito com carinho<br>para celebrar esse dia.
+        </p>
+
+        <button class="btn-present" onclick="openPlayer()">
+            Ver presente
+        </button>
+    </section>
+
+
+    <!-- ══════════════════════════════
+     TELA 2 — PLAYER
+══════════════════════════════ -->
+    <section id="player">
+
+        <!-- Header -->
+        <div class="player-header">
+            <div class="ph-chevron" onclick="backToWrapped()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                </svg>
+            </div>
+            <span class="ph-label">Tocando agora</span>
+            <span class="ph-dots">···</span>
+        </div>
+
+        <!-- Capa -->
+        <div class="album-wrap">
+            <!--
+      PERSONALIZE: Troque pelo caminho da foto da sua mãe.
+      Se for base64 ou URL remota, coloque no src.
+      Remova o "album-cover-placeholder" e descomente o <img> abaixo.
+    -->
+            <!-- <img class="album-cover" src="foto-mae.jpg" alt="Foto da mamãe" /> -->
+            <div class="album-cover-placeholder">
+                <img class="album-cover" src="./images/capa.jpg" alt="Feliz dia das mães" />
+            </div>
+        </div>
+
+        <!-- Info da faixa -->
+        <div class="track-info">
+            <div class="track-texts">
+                <!--
+        PERSONALIZE: Nome da música e artista
+      -->
+                <div class="track-name">Ordinary</div>
+                <div class="track-artist">Alex Warren · You'll Be Alright, Kid</div>
+            </div>
+            <div class="track-heart">♥</div>
+        </div>
+
+        <!-- Progresso -->
+        <div class="progress-wrap">
+            <div class="progress-bar-bg" id="progressBg" onclick="seekTo(event)">
+                <div class="progress-bar-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-times">
+                <span id="timeNow">0:00</span>
+                <span id="timeTotal">0:00</span>
+            </div>
+        </div>
+
+        <!-- Controles principais -->
+        <div class="controls">
+            <!-- Shuffle -->
+            <button class="ctrl-btn" title="Aleatório">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z" />
+                </svg>
+            </button>
+            <!-- Anterior -->
+            <button class="ctrl-btn" title="Anterior">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
+                </svg>
+            </button>
+            <!-- Play/Pause -->
+            <button class="ctrl-btn ctrl-play" id="playBtn" onclick="togglePlay()" title="Play">
+                <svg id="iconPlay" width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z" />
+                </svg>
+                <svg id="iconPause" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" style="display:none">
+                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                </svg>
+            </button>
+            <!-- Próxima -->
+            <button class="ctrl-btn" title="Próxima">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
+                </svg>
+            </button>
+            <!-- Repeat -->
+            <button class="ctrl-btn" title="Repetir">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Volume -->
+        <div class="volume-row">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-muted)">
+                <path
+                    d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM5 9v6h4l5 5V4L9 9H5zm7-.17v6.34L9.83 13H7v-2h2.83L12 8.83z" />
+            </svg>
+            <div class="vol-bar-bg" id="volBg" onclick="setVolume(event)">
+                <div class="vol-bar-fill" id="volFill"></div>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--text-muted)">
+                <path
+                    d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+            </svg>
+        </div>
+
+        <!-- Extra -->
+        <div class="extra-row">
+            <svg class="extra-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" />
+            </svg>
+            <svg class="extra-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+            </svg>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ── MENSAGEM (no lugar da letra) ── -->
+        <div class="lyrics-section">
+            <div class="lyrics-label">Mensagem especial</div>
+            <div class="lyrics-text">
+                <!--
+        PERSONALIZE: Escreva aqui a mensagem para sua mãe.
+        Use <br> para quebrar linhas.
+        Linhas com class "line-muted" ficam mais apagadas (efeito karaokê).
+      -->
+                <p>Mãe,</p><br>
+                <p class="line-muted">Existem palavras que o coração sente,</p>
+                <p>mas a voz às vezes não consegue dizer.</p><br>
+                <p class="line-muted">Por isso escolhemos a música —</p>
+                <p>porque ela fala o que o amor cala.</p><br>
+                <p>Obrigada por tudo que você é,</p>
+                <p class="line-muted">por cada abraço, cada olhar,</p>
+                <p>cada vez que você simplesmente <em>estava lá.</em></p><br>
+                <p>Te amamos infinitamente. 💚</p>
+                <p class="line-muted">— Suas filhas (+ cookie + pai)</p>
+            </div>
+        </div>
+
+        <!-- ── GALERIA ── -->
+        <div class="gallery-section">
+            <div class="gallery-label">Nossa família 📷</div>
+            <div class="gallery-grid" id="galleryGrid">
+                <!--
+        PERSONALIZE: Substitua cada "gallery-placeholder" por:
+        <div class="gallery-item" onclick="openLightbox('foto1.jpg')">
+          <img src="foto1.jpg" alt="Descrição" />
+        </div>
+
+        Você pode adicionar quantas fotos quiser.
+        A primeira ocupa largura total (destaque).
+      -->
+                <div class="gallery-item">
+                    <div class="gallery-item" onclick="openLightbox('./images/image4.jpg')">
+                        <img src="./images/image4.jpg" alt="Os 3 filhos" />
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-item" onclick="openLightbox('./images/image2.jpg')">
+                        <img src="./images/image2.jpg" alt="Rafudete" />
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-item" onclick="openLightbox('./images/image3.JPG')">
+                        <img src="./images/image3.JPG" alt="Duda" />
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-item" onclick="openLightbox('./images/image1.PNG')">
+                        <img src="./images/image1.PNG" alt="Familia" />
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-item" onclick="openLightbox('./images/image5.jpg')">
+                        <img src="./images/image5.jpg" alt="Familia" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="yt-error" id="ytError">
+            ⚠️ Não foi possível carregar o áudio. Verifique o ID do YouTube.
+        </p>
+
+    </section>
+
+    <!-- YouTube IFrame API (invisível)
+    <div id="yt-player"></div> -->
+
+    <!-- Lightbox -->
+    <div id="lightbox">
+        <button id="lightbox-close" onclick="closeLightbox()">✕</button>
+        <img id="lightbox-img" src="" alt="" />
+    </div>
+
+    <audio id="audioPlayer" preload="auto">
+        <source src="./audio/musica.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // ══════════════════════════════════════════
+        // ⚙️  CONFIGURAÇÃO — edite apenas aqui!
+        // ══════════════════════════════════════════
+
+        const CONFIG = {
+            // ID do vídeo do YouTube (parte após ?v= na URL)
+            // Exemplo: https://www.youtube.com/watch?v=dQw4w9WgXcQ → "dQw4w9WgXcQ"
+            // youtubeVideoId: "byxFUKxhT3s",
+
+            // Volume inicial (0 a 100)
+            volume: 80,
+        };
+
+        // ══════════════════════════════════════════
+        // LÓGICA DO PLAYER
+        // ══════════════════════════════════════════
+
+        let audio = null;
+        let isPlaying = false;
+        let progressInterval = null;
+
+        function openPlayer() {
+            document.getElementById('wrapped').style.display = 'none';
+            const player = document.getElementById('player');
+            player.style.display = 'flex';
+            player.classList.add('player-animate');
+
+            audio = document.getElementById('audioPlayer');
+            audio.volume = CONFIG.volume / 100;
+
+            // Atualiza duração quando carregar
+            audio.addEventListener('loadedmetadata', () => {
+                document.getElementById('timeTotal').textContent = formatTime(audio.duration);
+            });
+
+            audio.addEventListener('ended', () => {
+                setPlayIcon(false);
+                clearInterval(progressInterval);
+            });
+        }
+
+        function backToWrapped() {
+            if (audio) audio.pause();
+            clearInterval(progressInterval);
+            setPlayIcon(false);
+            document.getElementById('player').style.display = 'none';
+            document.getElementById('wrapped').style.display = 'flex';
+        }
+
+        function togglePlay() {
+            if (!audio) return;
+
+            if (audio.paused) {
+                audio.play();
+                setPlayIcon(true);
+                startProgressTimer();
+            } else {
+                audio.pause();
+                setPlayIcon(false);
+                clearInterval(progressInterval);
+            }
+        }
+
+        function startProgressTimer() {
+            clearInterval(progressInterval);
+            progressInterval = setInterval(() => {
+                if (!audio || !audio.duration) return;
+
+                const cur = audio.currentTime;
+                const dur = audio.duration;
+
+                const pct = (cur / dur) * 100;
+                document.getElementById('progressFill').style.width = pct + '%';
+                document.getElementById('timeNow').textContent = formatTime(cur);
+            }, 500);
+        }
+
+        function seekTo(e) {
+            if (!audio || !audio.duration) return;
+
+            const rect = e.currentTarget.getBoundingClientRect();
+            const pct = (e.clientX - rect.left) / rect.width;
+
+            audio.currentTime = pct * audio.duration;
+        }
+
+        function setVolume(e) {
+            if (!audio) return;
+
+            const rect = e.currentTarget.getBoundingClientRect();
+            const pct = (e.clientX - rect.left) / rect.width;
+
+            const vol = Math.max(0, Math.min(1, pct));
+            audio.volume = vol;
+            updateVolBar(vol);
+        }
+
+        function updateVolBar(pct) {
+            document.getElementById('volFill').style.width = (pct * 100) + '%';
+        }
+
+        function setPlayIcon(playing) {
+            isPlaying = playing;
+
+            document.getElementById('iconPlay').style.display = playing ? 'none' : 'block';
+            document.getElementById('iconPause').style.display = playing ? 'block' : 'none';
+
+            document.getElementById('playBtn').title = playing ? 'Pausar' : 'Play';
+        }
+        // Lightbox
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        document.getElementById('lightbox').addEventListener('click', function (e) {
+            if (e.target === this) closeLightbox();
+        });
+    </script>
+</body>
+
+</html>
