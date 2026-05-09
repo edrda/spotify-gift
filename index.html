@@ -84,7 +84,7 @@
         }
 
         .wrapped-title {
-            font-size: clamp(28px, 6vw, 48px);
+            font-size: clamp(24px, 6vw, 40px);
             font-weight: 900;
             text-align: center;
             line-height: 1.15;
@@ -619,11 +619,7 @@
 
         <!-- Capa -->
         <div class="album-wrap">
-            <!--
-      PERSONALIZE: Troque pelo caminho da foto da sua mãe.
-      Se for base64 ou URL remota, coloque no src.
-      Remova o "album-cover-placeholder" e descomente o <img> abaixo.
-    -->
+
             <!-- <img class="album-cover" src="foto-mae.jpg" alt="Foto da mamãe" /> -->
             <div class="album-cover-placeholder">
                 <img class="album-cover" src="./images/capa.jpg" alt="Feliz dia das mães" />
@@ -722,11 +718,7 @@
         <div class="lyrics-section">
             <div class="lyrics-label">Mensagem especial</div>
             <div class="lyrics-text">
-                <!--
-        PERSONALIZE: Escreva aqui a mensagem para sua mãe.
-        Use <br> para quebrar linhas.
-        Linhas com class "line-muted" ficam mais apagadas (efeito karaokê).
-      -->
+
                 <p>Mãe,</p><br>
                 <p class="line-muted">Existem palavras que o coração sente,</p>
                 <p>mas a voz às vezes não consegue dizer.</p><br>
@@ -744,15 +736,7 @@
         <div class="gallery-section">
             <div class="gallery-label">Nossa família 📷</div>
             <div class="gallery-grid" id="galleryGrid">
-                <!--
-        PERSONALIZE: Substitua cada "gallery-placeholder" por:
-        <div class="gallery-item" onclick="openLightbox('foto1.jpg')">
-          <img src="foto1.jpg" alt="Descrição" />
-        </div>
 
-        Você pode adicionar quantas fotos quiser.
-        A primeira ocupa largura total (destaque).
-      -->
                 <div class="gallery-item">
                     <div class="gallery-item" onclick="openLightbox('./images/image4.jpg')">
                         <img src="./images/image4.jpg" alt="Os 3 filhos" />
@@ -769,8 +753,8 @@
                     </div>
                 </div>
                 <div class="gallery-item">
-                    <div class="gallery-item" onclick="openLightbox('./images/image1.PNG')">
-                        <img src="./images/image1.PNG" alt="Familia" />
+                    <div class="gallery-item" onclick="openLightbox('./images/image6.jpg')">
+                        <img src="./images/image6.jpg" alt="Cookie" />
                     </div>
                 </div>
                 <div class="gallery-item">
@@ -782,7 +766,7 @@
         </div>
 
         <p class="yt-error" id="ytError">
-            ⚠️ Não foi possível carregar o áudio. Verifique o ID do YouTube.
+            ⚠️ Não foi possível carregar o áudio.
         </p>
 
     </section>
@@ -801,10 +785,6 @@
     </audio>
 
     <script>
-        // ══════════════════════════════════════════
-        // ⚙️  CONFIGURAÇÃO — edite apenas aqui!
-        // ══════════════════════════════════════════
-
         const CONFIG = {
             // ID do vídeo do YouTube (parte após ?v= na URL)
             // Exemplo: https://www.youtube.com/watch?v=dQw4w9WgXcQ → "dQw4w9WgXcQ"
@@ -824,6 +804,7 @@
 
         function openPlayer() {
             document.getElementById('wrapped').style.display = 'none';
+
             const player = document.getElementById('player');
             player.style.display = 'flex';
             player.classList.add('player-animate');
@@ -831,7 +812,7 @@
             audio = document.getElementById('audioPlayer');
             audio.volume = CONFIG.volume / 100;
 
-            // Atualiza duração quando carregar
+            // Atualiza duração
             audio.addEventListener('loadedmetadata', () => {
                 document.getElementById('timeTotal').textContent = formatTime(audio.duration);
             });
@@ -840,6 +821,16 @@
                 setPlayIcon(false);
                 clearInterval(progressInterval);
             });
+
+            // ▶ AUTOPLAY
+            audio.play()
+                .then(() => {
+                    setPlayIcon(true);
+                    startProgressTimer();
+                })
+                .catch((err) => {
+                    console.log('Autoplay bloqueado:', err);
+                });
         }
 
         function backToWrapped() {
@@ -918,6 +909,17 @@
 
         function closeLightbox() {
             document.getElementById('lightbox').classList.remove('active');
+        }
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '0:00';
+
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60)
+                .toString()
+                .padStart(2, '0');
+
+            return `${mins}:${secs}`;
         }
 
         document.getElementById('lightbox').addEventListener('click', function (e) {
